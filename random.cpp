@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
-#include <filesystem>
+#include <windows.h>
 
 std::string GenerateRandomName(int length) {
     std::string name;
@@ -24,13 +24,12 @@ std::string GenerateRandomName(int length) {
 int main() {
     std::string randomName = GenerateRandomName(10); // Задайте желаемую длину случайного имени
 
-    std::string currentPath = std::filesystem::current_path().string();
-
-    // Получаем путь к исполняемому файлу
     char exeFilePath[MAX_PATH];
     GetModuleFileName(NULL, exeFilePath, MAX_PATH);
 
-    std::string newExeFilePath = currentPath + "\\" + randomName + ".exe";
+    std::string newExeFilePath = exeFilePath;
+    size_t lastSlashIndex = newExeFilePath.find_last_of('\\');
+    newExeFilePath = newExeFilePath.substr(0, lastSlashIndex + 1) + randomName + ".exe";
 
     int result = rename(exeFilePath, newExeFilePath.c_str());
 
