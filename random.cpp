@@ -1,9 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <cstring>
 #include <string>
-#include <windows.h>
+#include <filesystem>
 
 std::string GenerateRandomName(int length) {
     std::string name;
@@ -22,14 +21,21 @@ std::string GenerateRandomName(int length) {
     return name;
 }
 
-int main(int argc, char* argv[]) {
+int main() {
     std::string randomName = GenerateRandomName(10); // Задайте желаемую длину случайного имени
-    std::string command = "wmic process where name='";
-    command += std::string(argv[0]) + "' call rename name='" + randomName + ".exe'";
 
-    system(command.c_str());
+    std::string currentPath = std::filesystem::current_path().string();
+    std::string exeFilePath = currentPath + "\\" + argv[0];
 
-    std::cout << "Название приложения было изменено на: " << randomName << std::endl;
+    std::string newExeFilePath = currentPath + "\\" + randomName + ".exe";
+
+    bool success = std::filesystem::rename(exeFilePath, newExeFilePath);
+
+    if (success) {
+        std::cout << "Имя исполняемого файла было изменено на: " << randomName << ".exe" << std::endl;
+    } else {
+        std::cout << "Не удалось изменить имя исполняемого файла." << std::endl;
+    }
 
     // Остальная логика вашего приложения...
 
