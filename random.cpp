@@ -22,24 +22,25 @@ std::string GenerateRandomName(int length) {
 }
 
 int main() {
-    std::string randomName = GenerateRandomName(10); // Задайте желаемую длину случайного имени
+    std::string randomName = GenerateRandomName(10); // Задайте желаемую длину случайного имени (Set the desired length of the random name)
 
-    char exeFilePath[MAX_PATH];
-    GetModuleFileName(NULL, exeFilePath, MAX_PATH);
+    wchar_t exeFilePath[MAX_PATH];
+    GetModuleFileNameW(NULL, exeFilePath, MAX_PATH);
 
-    std::string newExeFilePath = exeFilePath;
-    size_t lastSlashIndex = newExeFilePath.find_last_of('\\');
-    newExeFilePath = newExeFilePath.substr(0, lastSlashIndex + 1) + randomName + ".exe";
+    std::wstring newExeFilePath = exeFilePath;
+    size_t lastSlashIndex = newExeFilePath.find_last_of(L'\\');
+    newExeFilePath = newExeFilePath.substr(0, lastSlashIndex + 1) + std::wstring(randomName.begin(), randomName.end()) + L".exe";
 
-    int result = rename(exeFilePath, newExeFilePath.c_str());
+    int result = _wrename(exeFilePath, newExeFilePath.c_str());
 
     if (result == 0) {
-        std::cout << "Имя исполняемого файла было изменено на: " << randomName << ".exe" << std::endl;
-    } else {
-        std::cout << "Не удалось изменить имя исполняемого файла." << std::endl;
+        std::wcout << L"The name of the executable file has been changed to: " << newExeFilePath << std::endl;
+    }
+    else {
+        std::cout << "Unable to change executable file name." << std::endl;
     }
 
-    // Остальная логика вашего приложения...
+    // The rest of the logic of your application...
 
     return 0;
 }
