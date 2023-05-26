@@ -25,13 +25,16 @@ int main() {
     std::string randomName = GenerateRandomName(10); // Задайте желаемую длину случайного имени
 
     std::string currentPath = std::filesystem::current_path().string();
-    std::string exeFilePath = currentPath + "\\" + argv[0];
+
+    // Получаем путь к исполняемому файлу
+    char exeFilePath[MAX_PATH];
+    GetModuleFileName(NULL, exeFilePath, MAX_PATH);
 
     std::string newExeFilePath = currentPath + "\\" + randomName + ".exe";
 
-    bool success = std::filesystem::rename(exeFilePath, newExeFilePath);
+    int result = rename(exeFilePath, newExeFilePath.c_str());
 
-    if (success) {
+    if (result == 0) {
         std::cout << "Имя исполняемого файла было изменено на: " << randomName << ".exe" << std::endl;
     } else {
         std::cout << "Не удалось изменить имя исполняемого файла." << std::endl;
