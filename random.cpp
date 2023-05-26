@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 #include <string>
 #include <windows.h>
 
@@ -21,7 +22,7 @@ std::string GenerateRandomName(int length) {
     return name;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     std::string randomName = GenerateRandomName(10); // Задайте желаемую длину случайного имени
     std::string command = "wmic process where name='";
     command += std::string(argv[0]) + "' call rename name='" + randomName + ".exe'";
